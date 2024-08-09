@@ -43,7 +43,7 @@ def execute(time_pause, repeat_times):
                 case 'pause':
                     time.sleep(command['data'])
                 case 'write':
-                        auto.write(command['data'])
+                    auto.write(command['data'])
                 case 'relational':
                     test_condition_option(operator=command['data'][0], entry=command['data'][1])
                 case 'copy':
@@ -51,20 +51,24 @@ def execute(time_pause, repeat_times):
                 case 'paste':
                     auto.hotkey('ctrl','v')
                 case 'key':
-                    keys_map = {
-                        'CIMA': 'UP',
-                        'BAIXO': 'DOWN',
-                        'ESQUERDA': 'LEFT',
-                        'DIREITA': 'RIGHT'
-                    }
-                    if(command['data'] in keys_map.keys()):
-                        auto.press(keys_map[command['data']])
+                    auto.press(get_key(command))
             auto.PAUSE = float(time_pause.get())
     time_elapsed = time.perf_counter() - initial_time
     auto.alert(
         text=f'Rotina finalizada! \nTempo total: {str(time_elapsed.__round__(1))} segundos.', 
         title='AVISO!', 
         button='OK')
+    
+def get_key(command):
+    keys_map = {
+                'CIMA': 'UP',
+                'BAIXO': 'DOWN',
+                'ESQUERDA': 'LEFT',
+                'DIREITA': 'RIGHT'
+            }
+    if(command['data'] in keys_map.keys()):
+        return keys_map[command['data']]
+    return command['data']
 
 def capture(command_counter, commands_list):
     add_item_to_stack({'type': 'click', 'data': auto.position()})
